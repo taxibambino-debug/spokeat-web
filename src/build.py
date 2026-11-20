@@ -24,6 +24,8 @@ def u_guides(l): return "/en/guides/" if l == "en" else "/sv/guider/"
 def u_exp(l, k=""): return ("/en/expertise/" if l == "en" else "/sv/expertis/") + (f"{k}/" if k else "")
 def u_contact(l, topic=""): return ("/contact/" if l == "en" else "/sv/kontakt/") + (f"#{topic}" if topic else "")
 def u_early(l): return "/early-access/" if l == "en" else "/sv/tidig-tillgang/"
+def u_faq(l): return "/en/faq/" if l == "en" else "/sv/vanliga-fragor/"
+def u_find(l): return "/en/find-a-speaker/" if l == "en" else "/sv/hitta-en-talare/"
 U_AUTHOR = "/authors/ted-scheiman/"
 U_POLICY = "/about/editorial-policy/"
 
@@ -56,7 +58,7 @@ main{padding:40px 0 64px}.crumbs{font-size:14px;color:var(--soft);margin-bottom:
 article.prose{background:#fff;border:1px solid var(--line);border-radius:16px;padding:40px clamp(20px,5vw,56px)}
 .prose h1{font-size:clamp(30px,4vw,42px);margin:0 0 16px}.prose h2{font-size:26px;margin:36px 0 10px}.prose h3{font-size:20px;margin:26px 0 8px}
 .prose blockquote{margin:0 0 24px;padding:12px 16px;background:var(--tint);border-radius:10px;font-size:15px;color:var(--muted)}.prose blockquote p{margin:0}
-.prose table{border-collapse:collapse;width:100%;font-size:15px;margin:16px 0;display:block;overflow-x:auto}.prose th,.prose td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}.prose th{background:var(--tint)}
+.tw{overflow-x:auto;margin:16px 0;max-width:100%}.prose table{border-collapse:collapse;width:100%;font-size:15px;margin:0}.prose{min-width:0;overflow-wrap:break-word}.prose th,.prose td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}.prose th{background:var(--tint)}
 .prose li{margin:4px 0}.prose img{max-width:100%}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}.card h3{margin:0 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:15px}
@@ -67,10 +69,37 @@ details.card summary{font-weight:600;cursor:pointer}details.card p{margin-top:8p
 .cta h2{margin:0;color:#fff;font-size:28px}.cta p{margin:6px 0 0;color:#C7CAD6}.cta .btn{background:var(--accent);color:var(--ink)}
 footer.site{border-top:1px solid var(--line);background:#fff;font-size:14px;color:var(--soft)}footer.site .wrap{display:flex;flex-wrap:wrap;gap:20px;padding:24px}footer.site a{color:var(--soft)}
 .muted{color:var(--soft)}.lead{font-size:19px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.navt{position:absolute;opacity:0;pointer-events:none}.burger{display:none;width:44px;height:44px;border:1px solid var(--line);border-radius:10px;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer}.burger i{display:block;width:20px;height:2px;background:var(--ink);border-radius:2px}
+footer.site .wrap{flex-direction:column;gap:14px;padding:32px 24px}.fbrand{display:flex;flex-wrap:wrap;gap:16px;align-items:center}.flinks{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:15px}.flinks a{text-decoration:none}.flinks a:hover{text-decoration:underline}.fnote{font-size:13px}
+main.lp{padding:0}main.lp section{scroll-margin-top:16px}
+@media(max-width:900px){
+ .burger{display:flex}.top .wrap{flex-wrap:wrap}
+ nav.main{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0}
+ .navt:checked~nav.main{display:flex}
+ nav.main a{padding:14px 2px;border-top:1px solid var(--line);font-size:16px}nav.main a.btn{justify-content:center;margin-top:12px;border-top:0}
+ .navt:focus-visible+.burger{outline:2px solid var(--brand);outline-offset:2px}
+}
+@media(max-width:640px){
+ .lp [style*="padding: 80px 24px"],.lp [style*="padding: 88px 24px"],.lp [style*="padding: 72px 24px"],.lp [style*="padding: 64px 24px"]{padding-top:48px!important;padding-bottom:48px!important;padding-left:20px!important;padding-right:20px!important}
+ .lp [style*="padding: 72px 24px 64px"]{padding:40px 20px 40px!important}
+ .lp [style*="padding: 80px 24px 0"]{padding:48px 20px 0!important}
+ .lp [style*="padding: 48px 40px"],.lp [style*="padding: 48px"]{padding:28px 20px!important}
+ .lp [style*="padding: 0 24px 80px"]{padding:0 16px 48px!important}
+ .lp h1{font-size:36px!important}.lp h2{font-size:28px!important}
+ .lp [style*="font-size: 20px"]{font-size:18px!important}
+ .prose h2{font-size:22px}.cta{padding:28px 20px}.cta h2{font-size:24px}
+ article.prose{padding:24px 18px}
+ main{padding:24px 0 40px}.wrap{padding-left:16px;padding-right:16px}.top .wrap{padding:12px 16px}
+ .langbar .wrap{padding:8px 16px}
+}
+img,svg{max-width:100%}
 """
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">'
-NAV = {"en": [("Guides", u_guides("en")), ("By expertise", u_exp("en")), ("Contact", u_contact("en"))],
-       "sv": [("Guider", u_guides("sv")), ("Per expertområde", u_exp("sv")), ("Kontakt", u_contact("sv"))]}
+NAV = {"en": [("How it works", "/#how"), ("Why speak", "/#benefits"), ("Why us", "/#why-us"), ("For executives", "/#executive")],
+       "sv": [("Så fungerar det", "/sv/#how"), ("Varför tala", "/sv/#benefits"), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
+FOOT = {"en": [("Articles", u_guides("en")), ("By expertise", u_exp("en")), ("Find a speaker", u_find("en")), ("FAQ", u_faq("en")), ("Contact", u_contact("en")), ("How we research", U_POLICY)],
+        "sv": [("Artiklar", u_guides("sv")), ("Per expertområde", u_exp("sv")), ("Hitta en talare", u_find("sv")), ("Vanliga frågor", u_faq("sv")), ("Kontakt", u_contact("sv")), ("Så researchar vi", U_POLICY)]}
 EARLY = {"en": "Get early access", "sv": "Få tidig tillgång"}
 
 def head(l, title, desc, path, alt=None, extra=""):
@@ -89,16 +118,13 @@ def chrome_top(l, alt=None):
     swap = f'<a href="{alt or u_home(other)}" lang="{other}">{lab[other]}</a>'
     langbar = f'<div class="langbar"><div class="wrap"><span>{"Language" if l == "en" else "Språk"}:</span><b>{lab[l]}</b><span>|</span>{swap}</div></div>'
     nav = "".join(f'<a href="{h}">{esc(t)}</a>' for t, h in NAV[l])
-    return f'<body>{langbar}<header class="top"><div class="wrap"><a class="logo" href="{u_home(l)}"><span class="mark" aria-hidden="true"><span></span></span>Spoke At</a><nav class="main" aria-label="Main">{nav}<a class="btn" href="{u_early(l)}">{EARLY[l]}</a></nav></div></header>'
+    burger = f'<input type="checkbox" id="navt" class="navt" aria-hidden="true"><label for="navt" class="burger"><span class="sr">{"Menu" if l == "en" else "Meny"}</span><i></i><i></i><i></i></label>'
+    return f'<body>{langbar}<header class="top"><div class="wrap"><a class="logo" href="{u_home(l)}"><span class="mark" aria-hidden="true"><span></span></span>Spoke At</a>{burger}<nav class="main" aria-label="Main">{nav}<a class="btn" href="{u_early(l)}">{EARLY[l]}</a></nav></div></header>'
 
 def chrome_foot(l):
-    if l == "en":
-        links = [("Guides", u_guides("en")), ("Speaking opportunities by expertise", u_exp("en")), ("How we research", U_POLICY), ("Contact", u_contact("en"))]
-        note = "Not affiliated with any organiser we list."
-    else:
-        links = [("Guider", u_guides("sv")), ("Talaruppdrag per expertområde", u_exp("sv")), ("Så researchar vi", U_POLICY), ("Kontakt", u_contact("sv"))]
-        note = "Inte knutna till någon arrangör vi listar."
-    return f'<footer class="site"><div class="wrap"><span>Spoke At · spokeat.com</span>{"".join(f"<a href=\"{h}\">{esc(t)}</a>" for t, h in links)}<span>{note}</span></div></footer></body></html>'
+    note = "Not affiliated with any organiser we list." if l == "en" else "Inte knutna till någon arrangör vi listar."
+    links = "".join(f'<a href="{h}">{esc(x)}</a>' for x, h in FOOT[l])
+    return f'<footer class="site"><div class="wrap"><div class="fbrand"><a class="logo" href="{u_home(l)}"><span class="mark" aria-hidden="true"><span></span></span>Spoke At</a><span>hello@spokeat.com</span></div><nav class="flinks" aria-label="{"Footer" if l == "en" else "Sidfot"}">{links}</nav><span class="fnote">{note}</span></div></footer></body></html>'
 
 def cta_block(l):
     if l == "en": h, p = "Find out where you could speak this term", "Join the early-access list and be among the first to see your matches. Free, no card needed."
@@ -109,6 +135,8 @@ PAGES = []  # (path, alt_path or None, lang)
 def write(path, content, lang=None, alt=None, sitemap=True):
     fp = DIST + path + ("index.html" if path.endswith("/") else "")
     os.makedirs(os.path.dirname(fp), exist_ok=True)
+    if '<article class="prose">' in content:  # wide tables scroll inside their own box on phones
+        content = re.sub(r"<table\b", '<div class="tw"><table', content).replace("</table>", "</table></div>")
     open(fp, "w", encoding="utf-8").write(content)
     if sitemap: PAGES.append((path, alt, lang))
 
@@ -242,8 +270,62 @@ def build_landing():
                 if l == "en" else "Hitta gästföreläsningar, paneler, seminarier och konferensuppdrag som matchar din expertis, och nå rätt arrangör på deras språk.")
         path, alt = u_home(l), u_home("sv" if l == "en" else "en")
         org = ld({"@context": "https://schema.org", "@type": "Organization", "name": "Spoke At", "url": SITE, "email": "hello@spokeat.com"})
-        page = head(l, title, desc, path, alt, out["head"] + org) + "<body>" + b + "</body></html>"
+        b, found = split_landing(b, l)
+        page = head(l, title, desc, path, alt, out["head"] + org) + chrome_top(l, alt) + f'<main class="lp">{b}</main>' + chrome_foot(l)
         write(path, page, l, alt)
+        build_moved(l, found, alt_l="sv" if l == "en" else "en")
+
+def cut_section(b, sid):
+    """Remove <section id=sid>…</section> (nesting-aware); return (body, section_html)."""
+    i = b.find(f'<section id="{sid}"')
+    if i < 0: raise SystemExit(f"landing section {sid} missing")
+    depth, pos = 0, i
+    for m in re.finditer(r"<(/?)section\b", b[i:]):
+        depth += -1 if m.group(1) else 1
+        if depth == 0:
+            end = i + m.end() + b[i + m.end():].find(">") + 1
+            return b[:i] + b[end:], b[i:end]
+    raise SystemExit("unbalanced section")
+
+def cut_tag(b, tag):
+    i = b.find(f"<{tag}"); j = b.find(f"</{tag}>", i)
+    return b[:i] + b[j + len(tag) + 3:]
+
+def split_landing(b, l):
+    # drop the design's own language bar, header and footer: the shared chrome replaces them
+    i = b.find('<nav aria-label="Language"')
+    s = b.rfind("<div", 0, i); e = b.find("</div>", b.find("</nav>", i)) + 6
+    b = b[:s] + b[e:]
+    b = cut_tag(b, "header"); b = cut_tag(b, "footer")
+    found = {}
+    for sid in ("by-expertise", "find-speaker", "articles", "faq"):
+        b, found[sid] = cut_section(b, sid)
+    for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l))):
+        b = b.replace(f'href="{a}"', f'href="{h}"')
+    return b, found
+
+MOVED = {
+ "en": {"find": ("Find a speaker for your event or course", "Universities, associations and event organisers: describe the session and we suggest experienced professionals who fit."),
+        "faq": ("Frequently asked questions", "Answers about Spoke At: who it is for, what is free, pricing, eligibility, privacy and how organisers opt out.")},
+ "sv": {"find": ("Hitta en talare till ditt evenemang eller din kurs", "Universitet, föreningar och arrangörer: beskriv tillfället så föreslår vi erfarna yrkespersoner som passar."),
+        "faq": ("Vanliga frågor", "Svar om Spoke At: vem det är för, vad som är gratis, priser, behörighet, integritet och hur arrangörer avregistrerar sig.")}}
+
+def build_moved(l, found, alt_l):
+    for key, sid, url in (("find", "find-speaker", u_find), ("faq", "faq", u_faq)):
+        title, desc = MOVED[l][key]
+        sec = found[sid]
+        for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#start", u_early(l)), ("#top", u_home(l))):
+            sec = sec.replace(f'href="{a}"', f'href="{h}"')
+        extra = ""
+        if key == "faq":
+            qa = re.findall(r"<h3[^>]*>(.*?)</h3>\s*<p[^>]*>(.*?)</p>", sec, re.S)
+            extra = ld({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": re.sub("<[^>]+>", "", q).strip(), "acceptedAnswer": {"@type": "Answer", "text": re.sub("<[^>]+>", "", a).strip()}} for q, a in qa]})
+            sec = re.sub(r"(<h2[^>]*>)[^<]*(</h2>)", lambda m: m.group(1) + esc(title) + m.group(2), sec, count=1).replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
+        else:
+            sec = sec.replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
+        path, alt = url(l), url(alt_l)
+        write(path, head(l, title + " · Spoke At", desc, path, alt, extra) + chrome_top(l, alt) + f'<main class="lp">{sec}</main>' + chrome_foot(l), l, alt)
 
 # ---------- simple pages ----------
 def md_page(l, path, alt, title, desc, md_text, extra_ld=""):
