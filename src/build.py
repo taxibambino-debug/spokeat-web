@@ -95,6 +95,8 @@ main.lp{padding:0}main.lp section{scroll-margin-top:16px}
 }
 img,svg{max-width:100%}
 """
+import hashlib
+CSS_V = hashlib.md5(CSS.encode()).hexdigest()[:8]
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">'
 NAV = {"en": [("How it works", "/#how"), ("Why speak", "/#benefits"), ("Why us", "/#why-us"), ("For executives", "/#executive")],
        "sv": [("Så fungerar det", "/sv/#how"), ("Varför tala", "/sv/#benefits"), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
@@ -110,7 +112,7 @@ def head(l, title, desc, path, alt=None, extra=""):
     return f"""<!doctype html><html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{SITE}{path}">{alts}
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:type" content="website"><meta property="og:site_name" content="Spoke At">
-{FONTS}<link rel="stylesheet" href="/assets/site.css"><link rel="icon" href="/favicon.svg" type="image/svg+xml">{extra}</head>"""
+{FONTS}<link rel="stylesheet" href="/assets/site.css?v={CSS_V}"><link rel="icon" href="/favicon.svg" type="image/svg+xml">{extra}</head>"""
 
 def chrome_top(l, alt=None):
     other = "sv" if l == "en" else "en"
