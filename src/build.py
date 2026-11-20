@@ -27,6 +27,7 @@ def u_early(l): return "/early-access/" if l == "en" else "/sv/tidig-tillgang/"
 def u_faq(l): return "/en/faq/" if l == "en" else "/sv/vanliga-fragor/"
 def u_why(l): return "/en/why-speak/" if l == "en" else "/sv/varfor-tala/"
 def u_how(l): return "/en/how-it-works/" if l == "en" else "/sv/sa-fungerar-det/"
+def u_opps(l): return "/en/speaking-opportunities/" if l == "en" else "/sv/talaruppdrag/"
 def u_find(l): return "/en/find-a-speaker/" if l == "en" else "/sv/hitta-en-talare/"
 U_AUTHOR = "/authors/ted-scheiman/"
 U_POLICY = "/about/editorial-policy/"
@@ -96,12 +97,21 @@ main.lp{padding:0}main.lp section{scroll-margin-top:16px}
  .langbar .wrap{padding:8px 16px}
 }
 img,svg{max-width:100%}
+.opps{display:grid;gap:16px;margin:24px 0}.opp{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.opp h2,.opp h3{font-size:19px;margin:0 0 4px;line-height:1.3}.opp h2 a,.opp h3 a{color:var(--ink);text-decoration:none}.opp h2 a:hover,.opp h3 a:hover{text-decoration:underline}
+.opp .meta{color:var(--muted);font-size:15px;margin:0 0 10px}.dl{display:inline-block;background:#FFF4D6;color:#7A4B00;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;margin:0 0 10px}.dl.none{background:#EEF1F6;color:var(--muted)}
+.opp dl{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:10px 0 12px;font-size:15px}.opp dt{color:var(--soft)}.opp dd{margin:0}
+.opp ul{margin:0;padding-left:18px}.opp .go{font-weight:600;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0}.chips span{background:#EEF1F6;border-radius:8px;padding:3px 9px;font-size:13px}
+.oppgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:24px 0}
+.ophead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+@media(max-width:640px){.opp dl{grid-template-columns:1fr;gap:2px}.opp dt{margin-top:8px}}
 """
 import hashlib
 CSS_V = hashlib.md5(CSS.encode()).hexdigest()[:8]
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">'
-NAV = {"en": [("How it works", u_how("en")), ("Why speak", u_why("en")), ("Why us", "/#why-us"), ("For executives", "/#executive")],
-       "sv": [("Så fungerar det", u_how("sv")), ("Varför tala", u_why("sv")), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
+NAV = {"en": [("Speaking opportunities", u_opps("en")), ("How it works", u_how("en")), ("Why speak", u_why("en")), ("Why us", "/#why-us"), ("For executives", "/#executive")],
+       "sv": [("Talaruppdrag", u_opps("sv")), ("Så fungerar det", u_how("sv")), ("Varför tala", u_why("sv")), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
 FOOT = {"en": [("Articles", u_guides("en")), ("By expertise", u_exp("en")), ("Find a speaker", u_find("en")), ("FAQ", u_faq("en")), ("Contact", u_contact("en")), ("How we research", U_POLICY)],
         "sv": [("Artiklar", u_guides("sv")), ("Per expertområde", u_exp("sv")), ("Hitta en talare", u_find("sv")), ("Vanliga frågor", u_faq("sv")), ("Kontakt", u_contact("sv")), ("Så researchar vi", U_POLICY)]}
 EARLY = {"en": "Get early access", "sv": "Få tidig tillgång"}
@@ -306,6 +316,9 @@ def split_landing(b, l):
         b, found[sid] = cut_section(b, sid)
     for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l)), ("#how", u_how(l))):
         b = b.replace(f'href="{a}"', f'href="{h}"')
+    b, hero = cut_section(b, "top")
+    i = b.find("<section")
+    b = b[:i] + hero + opps_teaser(l) + b[i:]
     return b, found
 
 MOVED = {
@@ -334,6 +347,88 @@ def build_moved(l, found, alt_l):
             sec = sec.replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
         path, alt = url(l), url(alt_l)
         write(path, head(l, title + " · Spoke At", desc, path, alt, extra) + chrome_top(l, alt) + f'<main class="lp">{sec}<div class="wrap" style="padding-bottom:56px">{cta_block(l)}</div></main>' + chrome_foot(l), l, alt)
+
+# ---------- speaking opportunities (weekly listings) ----------
+import datetime, glob as _glob
+MON = {"en": "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(), "sv": "jan feb mar apr maj jun jul aug sep okt nov dec".split()}
+def fdate(s, l):
+    if not s: return ""
+    d = datetime.date.fromisoformat(s); return f"{d.day} {MON[l][d.month - 1]} {d.year}"
+
+def weekly():
+    """Latest weekly file; drop calls whose deadline has passed at build time; nearest deadline first, rolling calls last."""
+    f = sorted(_glob.glob(f"{ROOT}/content/weekly/*.json"))[-1]
+    w = json.load(open(f, encoding="utf-8"))
+    today = datetime.date.today().isoformat()
+    items = [i for i in w["items"] if not i.get("deadline") or i["deadline"] >= today]
+    items.sort(key=lambda i: (i.get("deadline") is None, i.get("deadline") or ""))
+    return w, items
+
+OPP_T = {
+ "en": {"title": "Speaking opportunities", "h1": "Open calls for speakers",
+        "desc": "Open calls for speakers we found and checked this week, ordered by deadline, with formats, topics, requirements and what speaking costs.",
+        "deadline": "Deadline", "rolling": "No deadline stated", "when": "Event", "where": "Where", "mode": "Format", "lang": "Language",
+        "formats": "Session types", "topics": "Topics", "req": "What they ask for", "cost": "Speaker costs", "apply": "Go to the call page", "checked": "Checked",
+        "updated": "Updated", "teaser_h": "Nearest deadlines", "teaser_p": "Open calls for speakers, checked this week.", "all": "See all open calls",
+        "note": ""},
+ "sv": {"title": "Talaruppdrag", "h1": "Öppna utlysningar för talare",
+        "desc": "Öppna utlysningar för talare som vi hittat och kontrollerat den här veckan, sorterade efter sista ansökningsdag, med format, ämnen, krav och vad det kostar att tala.",
+        "deadline": "Sista dag", "rolling": "Ingen sista dag angiven", "when": "Evenemang", "where": "Plats", "mode": "Form", "lang": "Språk",
+        "formats": "Typ av pass", "topics": "Ämnen", "req": "Vad de vill ha", "cost": "Kostnad för talare", "apply": "Till utlysningen", "checked": "Kontrollerad",
+        "updated": "Uppdaterad", "teaser_h": "Närmast sista ansökningsdag", "teaser_p": "Öppna utlysningar för talare, kontrollerade den här veckan.", "all": "Se alla öppna utlysningar",
+        "note": "Uppgifterna om varje utlysning är på engelska, så som arrangörerna publicerat dem."}}
+OPP_INTRO_SV = "Öppna utlysningar för talare som vi hittat och kontrollerat den här veckan, sorterade efter sista ansökningsdag. Varje rad länkar till arrangörens egen utlysning."
+OPP_METHOD_SV = "Så tar vi fram listan: vi söker på arrangörers webbplatser, Sessionize och det öppna konferensdataprojektet på GitHub efter utlysningar för talare som nyligen publicerats eller öppnats och som fortfarande är öppna. Varje utlysning öppnas och kontrolleras på arrangörens sida innan den tas med. Uppgifter kan ändras, så kontrollera alltid på utlysningens sida innan du ansöker. Vissa utlysningar tar betalt av talare; det framgår under Kostnad för talare."
+
+def place(i):
+    return ", ".join(x for x in (i.get("city"), i.get("country")) if x)
+
+def dl_badge(i, l):
+    T = OPP_T[l]
+    return f'<p class="dl">{T["deadline"]}: {fdate(i["deadline"], l)}</p>' if i.get("deadline") else f'<p class="dl none">{T["rolling"]}</p>'
+
+def opp_card(i, l, full=True, hl="h2"):
+    T = OPP_T[l]
+    ext = 'rel="nofollow noopener" target="_blank"'
+    meta = " · ".join(x for x in (esc(i.get("organiser") or ""), esc(place(i)), esc(i.get("mode") or "")) if x)
+    if not full:
+        ed = i.get("event_dates") or ""
+        dates = "" if not ed or ed.lower().startswith("not stated") else f'<p class="meta" style="margin:0">{esc(ed)}</p>'
+        return f'<div class="opp">{dl_badge(i, l)}<h3><a href="{u_opps(l)}#{esc(i["id"])}">{esc(i["title"])}</a></h3><p class="meta">{meta}</p>{dates}</div>'
+    rows = [(T["when"], esc(i.get("event_dates") or "–")), (T["where"], esc(place(i) or "–")), (T["mode"], esc(i.get("mode") or "–"))]
+    if i.get("language") and i["language"] != "Not stated": rows.append((T["lang"], esc(i["language"])))
+    if i.get("formats"): rows.append((T["formats"], "<ul>" + "".join(f"<li>{esc(x)}</li>" for x in i["formats"]) + "</ul>"))
+    if i.get("topics"): rows.append((T["topics"], '<p class="chips">' + "".join(f"<span>{esc(x)}</span>" for x in i["topics"]) + "</p>"))
+    if i.get("requirements"): rows.append((T["req"], "<ul>" + "".join(f"<li>{esc(x)}</li>" for x in i["requirements"]) + "</ul>"))
+    if i.get("speaker_costs"): rows.append((T["cost"], esc(i["speaker_costs"])))
+    dl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in rows)
+    return (f'<article class="opp" id="{esc(i["id"])}">{dl_badge(i, l)}<{hl}><a href="{esc(i["url"])}" {ext}>{esc(i["title"])}</a></{hl}>'
+            f'<p class="meta">{esc(i.get("organiser") or "")}</p><dl>{dl}</dl>'
+            f'<a class="go" href="{esc(i["url"])}" {ext}>{T["apply"]} ↗</a> <span class="muted" style="font-size:13px;margin-left:8px">{T["checked"]} {fdate(i.get("checked"), l)}</span></article>')
+
+def opps_teaser(l, n=3):
+    w, items = weekly(); T = OPP_T[l]
+    if not items: return ""
+    cards = "".join(opp_card(i, l, full=False) for i in items[:n])
+    return (f'<section id="opportunities" style="background:#fff;border-bottom:1px solid #E4E7EE"><div class="wrap" style="max-width:1200px;padding:56px 24px">'
+            f'<div class="ophead"><div><h2 style="margin:0 0 6px;font-size:30px">{T["teaser_h"]}</h2><p class="muted" style="margin:0">{T["teaser_p"]}</p></div>'
+            f'<a class="go" style="font-weight:600" href="{u_opps(l)}">{T["all"]} ({len(items)}) →</a></div><div class="oppgrid">{cards}</div></div></section>')
+
+def build_opps():
+    w, items = weekly()
+    for l in ("en", "sv"):
+        T = OPP_T[l]; alt_l = "sv" if l == "en" else "en"
+        path, alt = u_opps(l), u_opps(alt_l)
+        intro = w["intro"] if l == "en" else OPP_INTRO_SV
+        method = w["method"] if l == "en" else OPP_METHOD_SV
+        note = f'<p class="muted">{T["note"]}</p>' if T["note"] else ""
+        cards = "".join(opp_card(i, l) for i in items)
+        listld = ld({"@context": "https://schema.org", "@type": "ItemList", "name": T["h1"], "itemListElement": [
+            {"@type": "ListItem", "position": n + 1, "name": i["title"], "url": i["url"]} for n, i in enumerate(items)]})
+        body = (f'<main><div class="wrap"><article class="prose" style="max-width:880px;background:none;border:0;padding:0">'
+                f'<h1>{T["h1"]}</h1><p class="lead">{esc(intro)}</p><p class="muted">{T["updated"]} {fdate(w["date"], l)}</p>{note}'
+                f'<div class="opps">{cards}</div><p class="muted" style="font-size:15px">{esc(method)}</p>{cta_block(l)}</article></div></main>')
+        write(path, head(l, T["title"] + " · Spoke At", T["desc"], path, alt, listld) + chrome_top(l, alt) + body + chrome_foot(l), l, alt)
 
 # ---------- simple pages ----------
 def md_page(l, path, alt, title, desc, md_text, extra_ld=""):
@@ -472,5 +567,5 @@ def build_sitemap():
 
 if __name__ == "__main__":
     shutil.rmtree(DIST, ignore_errors=True); os.makedirs(DIST)
-    build_articles(); build_guides(); build_expertise(); build_landing(); build_author(); build_misc(); build_sitemap()
+    build_articles(); build_guides(); build_expertise(); build_landing(); build_opps(); build_author(); build_misc(); build_sitemap()
     print(len(PAGES), "pages in sitemap")

@@ -1,0 +1,359 @@
+{
+ "date": "2026-11-20",
+ "title": "New speaking opportunities: week 47, 2026",
+ "intro": "Open calls for speakers we found and checked this week, ordered by deadline. Each listing links to the organiser's own call page.",
+ "generated_at": "2026-11-20T18:58:52+01:00",
+ "items": [
+  {
+   "id": "ba-beyond-2027",
+   "title": "BA & Beyond 27",
+   "url": "https://sessionize.com/ba-beyond-27/",
+   "organiser": "BA & Beyond",
+   "event_dates": "18–28 May 2027 (seven locations, one day each; Sweden on 24 May)",
+   "city": null,
+   "country": "Several (Luxembourg, Netherlands, Hungary, Romania, Sweden, Denmark, Belgium)",
+   "mode": "In person",
+   "posted": "2026-11-01",
+   "posted_note": "call opened",
+   "deadline": "2026-11-30",
+   "language": "English",
+   "formats": [
+    "20-minute talk (Espresso)",
+    "40-minute talk with audience engagement (Lungo)",
+    "40-minute informal conversation, no slides",
+    "2.5-hour workshop"
+   ],
+   "topics": [
+    "Business analysis",
+    "Leading change",
+    "Strategy and business architecture",
+    "AI and digital transformation",
+    "Facilitation and soft skills",
+    "Organisation design"
+   ],
+   "requirements": [
+    "Real-life results from you or your team strongly preferred",
+    "No commercial presentations",
+    "Up to two topics; abstract with up to three key takeaways",
+    "Multi-stage process with follow-up questions"
+   ],
+   "speaker_costs": "Free to speak. One speaker per session gets a free pass to the whole event; co-speaker gets 50% off. Workshop facilitators get limited travel cover.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "ispe-nordic-annual-meeting-2027",
+   "title": "2027 ISPE Nordic Affiliate Annual Meeting: Call for Proposals",
+   "url": "https://sessionize.com/2027-Nordic-Annual-Meeting/",
+   "organiser": "ISPE Nordic Affiliate",
+   "event_dates": "1–2 March 2027",
+   "city": "Copenhagen",
+   "country": "Denmark",
+   "mode": "In person",
+   "posted": "2026-09-08",
+   "posted_note": "call opened (older call, still open)",
+   "deadline": "2026-11-30",
+   "language": "Not stated",
+   "formats": [
+    "Presentation (length not stated)"
+   ],
+   "topics": [
+    "Pharma quality and GMP",
+    "AI and digitalisation in regulated environments",
+    "Sustainability and energy efficiency",
+    "Operational excellence",
+    "Project management"
+   ],
+   "requirements": [
+    "Educational, practical and non-commercial; sales talks not considered",
+    "Cover challenge, approach, impact and takeaways",
+    "Open to professionals at all career stages"
+   ],
+   "speaker_costs": "Free for speakers. Other benefits not stated.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "ocx-2027",
+   "title": "OCX 2027: Call for Proposals",
+   "url": "https://ocxconf.org/call-for-proposals",
+   "organiser": "Eclipse Foundation",
+   "event_dates": "Not stated",
+   "city": "Brussels",
+   "country": "Belgium",
+   "mode": "In person",
+   "posted": "2026-11-16",
+   "posted_note": "first listed 2026-11-16 (dataset)",
+   "deadline": "2026-12-06",
+   "language": "Not stated",
+   "formats": [
+    "Talk (length not stated)"
+   ],
+   "topics": [
+    "Digital sovereignty",
+    "Cybersecurity and regulatory compliance",
+    "Open source software development",
+    "Software-defined systems and mobility",
+    "Research and innovation"
+   ],
+   "requirements": [
+    "Vendor-neutral: no promotional talks",
+    "Judged on clarity, relevance, originality and impact",
+    "First-time speakers welcome",
+    "Consent to recording and Code of Conduct"
+   ],
+   "speaker_costs": "Free conference pass and speaker dinner. Speakers pay their own travel and hotel.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "workplace-ninjas-norway-2027",
+   "title": "Workplace Ninjas Norway 2027",
+   "url": "https://sessionize.com/workplace-ninjas-norway-2027",
+   "organiser": "Workplace Ninjas Norway",
+   "event_dates": "20 May 2027",
+   "city": "Oslo",
+   "country": "Norway",
+   "mode": "In person",
+   "posted": "2026-10-01",
+   "posted_note": "call opened (older call, still open)",
+   "deadline": "2027-01-08",
+   "language": "Not stated",
+   "formats": [
+    "45–50 minute session"
+   ],
+   "topics": [
+    "AI, Copilot and agents in IT",
+    "Digital workplace",
+    "Identity and access",
+    "Security operations",
+    "Data governance"
+   ],
+   "requirements": [
+    "Technical community conference: real-world implementations and lessons",
+    "No sales presentations or product pitches",
+    "Live demos encouraged"
+   ],
+   "speaker_costs": "Free entry, one hotel night, economy travel up to EUR 400 (EUR 300 each for co-speakers).",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "ebaday-2027-fintech-zone",
+   "title": "EBAday 2027 Fintech Zone",
+   "url": "https://www.surveymonkey.com/r/ebaday2027applicationform",
+   "organiser": "EBAday (Euro Banking Association event)",
+   "event_dates": "Not stated (2027)",
+   "city": "Rome",
+   "country": "Italy",
+   "mode": "In person",
+   "posted": null,
+   "posted_note": "",
+   "deadline": "2027-01-29",
+   "language": "Not stated",
+   "formats": [
+    "Startup pitch (16 selected)"
+   ],
+   "topics": [
+    "Payments",
+    "Open banking and embedded finance",
+    "Fraud prevention",
+    "Banking-as-a-Service",
+    "Fintech and startups"
+   ],
+   "requirements": [
+    "For early-stage fintechs with a working product or proof of concept",
+    "Solution relevant to banking, payments or financial services",
+    "Written answers with word limits; company website and LinkedIn"
+   ],
+   "speaker_costs": "Free to apply.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "span-cyber-security-arena-2027",
+   "title": "Span Cyber Security Arena 2027",
+   "url": "https://sessionize.com/span-cyber-security-arena-2027",
+   "organiser": "Span d.d.",
+   "event_dates": "14–16 April 2027",
+   "city": "Poreč",
+   "country": "Croatia",
+   "mode": "In person",
+   "posted": "2026-10-01",
+   "posted_note": "call opened (older call, still open)",
+   "deadline": "2027-02-01",
+   "language": "Not stated",
+   "formats": [
+    "Not stated"
+   ],
+   "topics": [
+    "Cyber resilience",
+    "Governance, risk and regulation (NIS2, DORA)",
+    "Critical infrastructure security",
+    "Security operations",
+    "AI and automation"
+   ],
+   "requirements": [
+    "For security, risk and compliance professionals, regulators and technology leaders",
+    "Real-world case studies and lessons learned welcome",
+    "Decisions by 1 March 2027; sessions recorded"
+   ],
+   "speaker_costs": "Travel and hotel covered.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "workhuman-forum-london-2027",
+   "title": "Workhuman Forum London (also Workhuman Webinars)",
+   "url": "https://www.workhuman.com/call-for-speakers/",
+   "organiser": "Workhuman",
+   "event_dates": "Not stated",
+   "city": "London",
+   "country": "United Kingdom",
+   "mode": "In person",
+   "posted": null,
+   "posted_note": "",
+   "deadline": "2027-02-05",
+   "language": "Not stated",
+   "formats": [
+    "Forum session",
+    "Webinar (rolling call)"
+   ],
+   "topics": [
+    "Wellbeing at work",
+    "Employee recognition",
+    "Future of work",
+    "Performance management",
+    "Diversity and inclusion",
+    "Leadership"
+   ],
+   "requirements": [
+    "Video sample link required",
+    "Show tangible impact and actionable takeaways",
+    "Accepted speakers attend the whole event",
+    "No proposals by email"
+   ],
+   "speaker_costs": "For in-person events, registration and hotel covered.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "dynamics-user-group-sweden-april-2027",
+   "title": "Dynamics User Group Sweden: 21 April 2027",
+   "url": "https://sessionize.com/dynamics-user-group-sweden-21-april27/",
+   "organiser": "Dynamics User Group Sweden",
+   "event_dates": "21 April 2027",
+   "city": "Stockholm",
+   "country": "Sweden",
+   "mode": "In person",
+   "posted": "2026-11-09",
+   "posted_note": "call opened",
+   "deadline": "2027-02-28",
+   "language": "Swedish",
+   "formats": [
+    "User group session (length not stated)"
+   ],
+   "topics": [
+    "Business systems (Microsoft Dynamics)",
+    "Digitalisation",
+    "ERP and CRM"
+   ],
+   "requirements": [
+    "Title and description in Swedish first",
+    "Fill in target audience, product and level correctly",
+    "Speakers register for the event themselves"
+   ],
+   "speaker_costs": "Speaker ticket sent after approval.",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "isc2-norway-constant-call",
+   "title": "ISC2 Norway: Constant Call for Speakers",
+   "url": "https://sessionize.com/isc2-norway",
+   "organiser": "ISC2 Norway (chapter in formation)",
+   "event_dates": "To be defined",
+   "city": null,
+   "country": "Norway",
+   "mode": "Online",
+   "posted": "2026-06-01",
+   "posted_note": "call opened (older rolling call)",
+   "deadline": "2027-05-31",
+   "language": "Not stated",
+   "formats": [
+    "30–60 minute talk",
+    "Panel",
+    "Case study",
+    "Workshop",
+    "Career talk"
+   ],
+   "topics": [
+    "Security leadership",
+    "Governance, risk and compliance",
+    "Cyber resilience",
+    "Privacy and data protection",
+    "AI security"
+   ],
+   "requirements": [
+    "Abstract of 150–500 words with key takeaways",
+    "No marketing talks or product pitches",
+    "Agree to the Code of Conduct"
+   ],
+   "speaker_costs": "Not stated",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "hlth-europe-2027",
+   "title": "HLTH Europe 2027: Become a Speaker",
+   "url": "https://hlth.com/events/europe/become-a-speaker/",
+   "organiser": "HLTH",
+   "event_dates": "21–24 June 2027",
+   "city": "Amsterdam",
+   "country": "Netherlands",
+   "mode": "In person",
+   "posted": null,
+   "posted_note": "",
+   "deadline": null,
+   "language": "Not stated",
+   "formats": [
+    "Not stated"
+   ],
+   "topics": [
+    "Health innovation",
+    "Longevity and prevention",
+    "AI in healthcare",
+    "Health data and cybersecurity",
+    "Startups, founders and investors"
+   ],
+   "requirements": [
+    "Bold perspectives from people at the frontier of healthcare innovation",
+    "Read the speaker guidelines before submitting"
+   ],
+   "speaker_costs": "Not stated",
+   "checked": "2026-11-20"
+  },
+  {
+   "id": "brightonseo-april-2027",
+   "title": "brightonSEO April 2027: Speaker Pitch",
+   "url": "https://brightonseo.com/speaker-pitch",
+   "organiser": "RoughAgenda Ltd",
+   "event_dates": "April 2027 (days not stated)",
+   "city": "Brighton",
+   "country": "United Kingdom",
+   "mode": "In person",
+   "posted": null,
+   "posted_note": "",
+   "deadline": null,
+   "language": "Not stated",
+   "formats": [
+    "20-minute talk"
+   ],
+   "topics": [
+    "Search marketing (SEO)",
+    "Content marketing",
+    "Influencer marketing",
+    "Marketing measurement"
+   ],
+   "requirements": [
+    "One specific, actionable idea per pitch",
+    "No self-promotion, product demos or basic tips",
+    "Rolling review; only successful speakers get a reply"
+   ],
+   "speaker_costs": "Free all-access ticket plus two passes, speaker training and mentoring.",
+   "checked": "2026-11-20"
+  }
+ ],
+ "method": "How we compile this: we search organiser websites, Sessionize and the open conference-data project on GitHub for calls for speakers that were published or opened recently and are still open. Every listing is opened and checked on the organiser's page before it is included. \"Posted\" is the date the call opened or was published, where the organiser states it. Details can change, so always confirm on the call page before you apply. Some calls charge speakers; that is shown under Speaker costs."
+}
