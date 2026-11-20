@@ -26,6 +26,7 @@ def u_contact(l, topic=""): return ("/contact/" if l == "en" else "/sv/kontakt/"
 def u_early(l): return "/early-access/" if l == "en" else "/sv/tidig-tillgang/"
 def u_faq(l): return "/en/faq/" if l == "en" else "/sv/vanliga-fragor/"
 def u_why(l): return "/en/why-speak/" if l == "en" else "/sv/varfor-tala/"
+def u_how(l): return "/en/how-it-works/" if l == "en" else "/sv/sa-fungerar-det/"
 def u_find(l): return "/en/find-a-speaker/" if l == "en" else "/sv/hitta-en-talare/"
 U_AUTHOR = "/authors/ted-scheiman/"
 U_POLICY = "/about/editorial-policy/"
@@ -99,8 +100,8 @@ img,svg{max-width:100%}
 import hashlib
 CSS_V = hashlib.md5(CSS.encode()).hexdigest()[:8]
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">'
-NAV = {"en": [("How it works", "/#how"), ("Why speak", u_why("en")), ("Why us", "/#why-us"), ("For executives", "/#executive")],
-       "sv": [("Så fungerar det", "/sv/#how"), ("Varför tala", u_why("sv")), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
+NAV = {"en": [("How it works", u_how("en")), ("Why speak", u_why("en")), ("Why us", "/#why-us"), ("For executives", "/#executive")],
+       "sv": [("Så fungerar det", u_how("sv")), ("Varför tala", u_why("sv")), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
 FOOT = {"en": [("Articles", u_guides("en")), ("By expertise", u_exp("en")), ("Find a speaker", u_find("en")), ("FAQ", u_faq("en")), ("Contact", u_contact("en")), ("How we research", U_POLICY)],
         "sv": [("Artiklar", u_guides("sv")), ("Per expertområde", u_exp("sv")), ("Hitta en talare", u_find("sv")), ("Vanliga frågor", u_faq("sv")), ("Kontakt", u_contact("sv")), ("Så researchar vi", U_POLICY)]}
 EARLY = {"en": "Get early access", "sv": "Få tidig tillgång"}
@@ -301,25 +302,27 @@ def split_landing(b, l):
     b = b[:s] + b[e:]
     b = cut_tag(b, "header"); b = cut_tag(b, "footer")
     found = {}
-    for sid in ("by-expertise", "find-speaker", "benefits", "articles", "faq"):
+    for sid in ("by-expertise", "find-speaker", "benefits", "how", "articles", "faq"):
         b, found[sid] = cut_section(b, sid)
-    for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l))):
+    for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l)), ("#how", u_how(l))):
         b = b.replace(f'href="{a}"', f'href="{h}"')
     return b, found
 
 MOVED = {
- "en": {"why": ("Why speaking is worth your time", "What speaking at universities, associations and events gives professionals: visibility, content and self-improvement."),
+ "en": {"how": ("How it works", "How Spoke At finds speaking opportunities that match your expertise and helps you reach the right organiser."),
+        "why": ("Why speaking is worth your time", "What speaking at universities, associations and events gives professionals: visibility, content and self-improvement."),
         "find": ("Find a speaker for your event or course", "Universities, associations and event organisers: describe the session and we suggest experienced professionals who fit."),
         "faq": ("Frequently asked questions", "Answers about Spoke At: who it is for, what is free, pricing, eligibility, privacy and how organisers opt out.")},
- "sv": {"why": ("Därför är det värt din tid att tala", "Vad föreläsningar på universitet, i föreningar och på evenemang ger yrkespersoner: synlighet, innehåll och utveckling."),
+ "sv": {"how": ("Så fungerar det", "Så hittar Spoke At talaruppdrag som matchar din expertis och hjälper dig att nå rätt arrangör."),
+        "why": ("Därför är det värt din tid att tala", "Vad föreläsningar på universitet, i föreningar och på evenemang ger yrkespersoner: synlighet, innehåll och utveckling."),
         "find": ("Hitta en talare till ditt evenemang eller din kurs", "Universitet, föreningar och arrangörer: beskriv tillfället så föreslår vi erfarna yrkespersoner som passar."),
         "faq": ("Vanliga frågor", "Svar om Spoke At: vem det är för, vad som är gratis, priser, behörighet, integritet och hur arrangörer avregistrerar sig.")}}
 
 def build_moved(l, found, alt_l):
-    for key, sid, url in (("find", "find-speaker", u_find), ("faq", "faq", u_faq), ("why", "benefits", u_why)):
+    for key, sid, url in (("find", "find-speaker", u_find), ("faq", "faq", u_faq), ("why", "benefits", u_why), ("how", "how", u_how)):
         title, desc = MOVED[l][key]
         sec = found[sid]
-        for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l)), ("#start", u_early(l)), ("#top", u_home(l))):
+        for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l)), ("#how", u_how(l)), ("#start", u_early(l)), ("#top", u_home(l))):
             sec = sec.replace(f'href="{a}"', f'href="{h}"')
         extra = ""
         if key == "faq":
@@ -330,7 +333,7 @@ def build_moved(l, found, alt_l):
         else:
             sec = sec.replace("<h2", "<h1", 1).replace("</h2>", "</h1>", 1)
         path, alt = url(l), url(alt_l)
-        write(path, head(l, title + " · Spoke At", desc, path, alt, extra) + chrome_top(l, alt) + f'<main class="lp">{sec}</main>' + chrome_foot(l), l, alt)
+        write(path, head(l, title + " · Spoke At", desc, path, alt, extra) + chrome_top(l, alt) + f'<main class="lp">{sec}<div class="wrap" style="padding-bottom:56px">{cta_block(l)}</div></main>' + chrome_foot(l), l, alt)
 
 # ---------- simple pages ----------
 def md_page(l, path, alt, title, desc, md_text, extra_ld=""):
