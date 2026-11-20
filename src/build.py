@@ -97,6 +97,9 @@ main.lp{padding:0}main.lp section{scroll-margin-top:16px}
  .langbar .wrap{padding:8px 16px}
 }
 img,svg{max-width:100%}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(20,24,40,.18);padding:18px 20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.cc[hidden]{display:none}.cc p{margin:0;flex:1 1 320px;font-size:15px;color:var(--ink)}.ccb{display:flex;gap:10px}
+.cc button{font:inherit;font-weight:600;font-size:15px;min-height:44px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid #1F3A8A;background:#fff;color:#1F3A8A}.cc button[data-accept]{background:#1F3A8A;color:#fff}
 .opps{display:grid;gap:16px;margin:24px 0}.opp{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
 .opp h2,.opp h3{font-size:19px;margin:0 0 4px;line-height:1.3}.opp h2 a,.opp h3 a{color:var(--ink);text-decoration:none}.opp h2 a:hover,.opp h3 a:hover{text-decoration:underline}
 .opp .meta{color:var(--muted);font-size:15px;margin:0 0 10px}.dl{display:inline-block;background:#FFF4D6;color:#7A4B00;border-radius:999px;padding:3px 12px;font-size:14px;font-weight:600;margin:0 0 10px}.dl.none{background:#EEF1F6;color:var(--muted)}
@@ -115,6 +118,20 @@ NAV = {"en": [("Speaking opportunities", u_opps("en")), ("How it works", u_how("
 FOOT = {"en": [("Articles", u_guides("en")), ("By expertise", u_exp("en")), ("Find a speaker", u_find("en")), ("FAQ", u_faq("en")), ("Contact", u_contact("en")), ("How we research", U_POLICY)],
         "sv": [("Artiklar", u_guides("sv")), ("Per expertområde", u_exp("sv")), ("Hitta en talare", u_find("sv")), ("Vanliga frågor", u_faq("sv")), ("Kontakt", u_contact("sv")), ("Så researchar vi", U_POLICY)]}
 EARLY = {"en": "Get early access", "sv": "Få tidig tillgång"}
+GA_ID = "G-E9MGLSWHFS"
+# Google Analytics loads only after the visitor clicks Accept (stored in localStorage); Decline removes any _ga cookies.
+CONSENT_JS = """<script>(function(){var K='sa_consent',ID='%s';
+function load(){if(window.__sa_ga)return;window.__sa_ga=1;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',ID);var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+ID;document.head.appendChild(s);}
+function clear(){document.cookie.split(';').forEach(function(c){var n=c.split('=')[0].trim();if(n.indexOf('_ga')===0){['', '.spokeat.com', 'spokeat.com'].forEach(function(d){document.cookie=n+'=; Max-Age=0; path=/'+(d?'; domain='+d:'');});}});}
+var c=null;try{c=localStorage.getItem(K)}catch(e){}
+if(c==='yes')load();
+document.addEventListener('DOMContentLoaded',function(){var b=document.getElementById('cc');if(!b)return;if(c!=='yes'&&c!=='no')b.hidden=false;
+function set(v){try{localStorage.setItem(K,v)}catch(e){};c=v;b.hidden=true;if(v==='yes')load();else clear();}
+b.querySelector('[data-accept]').addEventListener('click',function(){set('yes')});b.querySelector('[data-decline]').addEventListener('click',function(){set('no')});
+document.querySelectorAll('[data-cookie-settings]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();b.hidden=false;});});});})();</script>""" % GA_ID
+CONSENT_TXT = {
+ "en": ("We would like to use Google Analytics cookies to see how visitors use this site. Nothing is tracked unless you accept, and you can change your choice at any time under Cookie settings at the bottom of every page.", "Accept", "Decline", "Cookie settings"),
+ "sv": ("Vi vill använda kakor från Google Analytics för att se hur besökare använder webbplatsen. Inget spåras om du inte godkänner, och du kan ändra ditt val när som helst under Kakinställningar längst ner på varje sida.", "Godkänn", "Avböj", "Kakinställningar")}
 
 def head(l, title, desc, path, alt=None, extra=""):
     alts = ""
@@ -122,7 +139,7 @@ def head(l, title, desc, path, alt=None, extra=""):
         en, sv = (path, alt) if l == "en" else (alt, path)
         alts = f'<link rel="alternate" hreflang="en" href="{SITE}{en}"><link rel="alternate" hreflang="sv" href="{SITE}{sv}"><link rel="alternate" hreflang="x-default" href="{SITE}{en}">'
     return f"""<!doctype html><html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{SITE}{path}">{alts}
+{CONSENT_JS}<title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{SITE}{path}">{alts}
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:type" content="website"><meta property="og:site_name" content="Spoke At">
 {FONTS}<link rel="stylesheet" href="/assets/site.css?v={CSS_V}"><link rel="icon" href="/favicon.svg" type="image/svg+xml">{extra}</head>"""
 
@@ -138,7 +155,9 @@ def chrome_top(l, alt=None):
 def chrome_foot(l):
     note = "Not affiliated with any organiser we list." if l == "en" else "Inte knutna till någon arrangör vi listar."
     links = "".join(f'<a href="{h}">{esc(x)}</a>' for x, h in FOOT[l])
-    return f'<footer class="site"><div class="wrap"><div class="fbrand"><a class="logo" href="{u_home(l)}"><span class="mark" aria-hidden="true"><span></span></span>Spoke At</a><span>hello@spokeat.com</span></div><nav class="flinks" aria-label="{"Footer" if l == "en" else "Sidfot"}">{links}</nav><span class="fnote">{note}</span></div></footer></body></html>'
+    ct = CONSENT_TXT[l]
+    banner = f'<div id="cc" class="cc" role="region" aria-label="{ct[3]}" hidden><p>{esc(ct[0])}</p><div class="ccb"><button type="button" data-decline>{ct[2]}</button><button type="button" data-accept>{ct[1]}</button></div></div>'
+    return f'<footer class="site"><div class="wrap"><div class="fbrand"><a class="logo" href="{u_home(l)}"><span class="mark" aria-hidden="true"><span></span></span>Spoke At</a><span>hello@spokeat.com</span></div><nav class="flinks" aria-label="{"Footer" if l == "en" else "Sidfot"}">{links}</nav><span class="fnote">{note} · <a href="#" data-cookie-settings>{CONSENT_TXT[l][3]}</a></span></div></footer>{banner}</body></html>'
 
 def cta_block(l):
     if l == "en": h, p = "Find out where you could speak this term", "Join the early-access list and be among the first to see your matches. Free, no card needed."
