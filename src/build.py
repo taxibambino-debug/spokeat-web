@@ -97,6 +97,7 @@ main.lp{padding:0}main.lp section{scroll-margin-top:16px}
  .langbar .wrap{padding:8px 16px}
 }
 img,svg{max-width:100%}
+.popg{list-style:none;padding:0;margin:24px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}.popg a{display:block;height:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.4}.popg a:hover{border-color:var(--brand);color:var(--brand)}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;z-index:50;max-width:720px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(20,24,40,.18);padding:18px 20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
 .cc[hidden]{display:none}.cc p{margin:0;flex:1 1 320px;font-size:15px;color:var(--ink)}.ccb{display:flex;gap:10px}
 .cc button{font:inherit;font-weight:600;font-size:15px;min-height:44px;padding:10px 18px;border-radius:10px;cursor:pointer;border:1px solid #1F3A8A;background:#fff;color:#1F3A8A}.cc button[data-accept]{background:#1F3A8A;color:#fff}
@@ -111,8 +112,12 @@ img,svg{max-width:100%}
 @media(max-width:640px){.opp dl{grid-template-columns:1fr;gap:2px}.opp dt{margin-top:8px}}
 """
 import hashlib
-CSS_V = hashlib.md5(CSS.encode()).hexdigest()[:8]
-FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">'
+FONTS = '<link rel="preload" href="/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>'
+FONT_CSS = "".join(
+    f"@font-face{{font-family:'{fam}';font-style:normal;font-display:swap;font-weight:{w};src:url(/assets/fonts/{f}-{sub}-wght-normal.woff2) format('woff2');unicode-range:{ur}}}"
+    for fam, f, w in (("Inter", "inter", "100 900"), ("Space Grotesk", "space-grotesk", "300 700"))
+    for sub, ur in (("latin", "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"),
+                    ("latin-ext", "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF")))
 NAV = {"en": [("Speaking opportunities", u_opps("en")), ("How it works", u_how("en")), ("Why speak", u_why("en")), ("Why us", "/#why-us"), ("For executives", "/#executive")],
        "sv": [("Talaruppdrag", u_opps("sv")), ("Så fungerar det", u_how("sv")), ("Varför tala", u_why("sv")), ("Varför oss", "/sv/#why-us"), ("För företag", "/sv/#executive")]}
 FOOT = {"en": [("Articles", u_guides("en")), ("By expertise", u_exp("en")), ("Find a speaker", u_find("en")), ("FAQ", u_faq("en")), ("Contact", u_contact("en")), ("How we research", U_POLICY)],
@@ -133,6 +138,9 @@ CONSENT_TXT = {
  "en": ("We would like to use Google Analytics cookies to see how visitors use this site. Nothing is tracked unless you accept, and you can change your choice at any time under Cookie settings at the bottom of every page.", "Accept", "Decline", "Cookie settings"),
  "sv": ("Vi vill använda kakor från Google Analytics för att se hur besökare använder webbplatsen. Inget spåras om du inte godkänner, och du kan ändra ditt val när som helst under Kakinställningar längst ner på varje sida.", "Godkänn", "Avböj", "Kakinställningar")}
 
+CSS_V = hashlib.md5((FONT_CSS + CSS).encode()).hexdigest()[:8]
+OG_ALT = {"en": "Spoke At: speaking opportunities for professionals", "sv": "Spoke At: talaruppdrag för erfarna yrkespersoner"}
+
 def head(l, title, desc, path, alt=None, extra=""):
     alts = ""
     if alt:
@@ -140,7 +148,9 @@ def head(l, title, desc, path, alt=None, extra=""):
         alts = f'<link rel="alternate" hreflang="en" href="{SITE}{en}"><link rel="alternate" hreflang="sv" href="{SITE}{sv}"><link rel="alternate" hreflang="x-default" href="{SITE}{en}">'
     return f"""<!doctype html><html lang="{l}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 {CONSENT_JS}<title>{esc(title)}</title><meta name="description" content="{esc(desc)}"><link rel="canonical" href="{SITE}{path}">{alts}
-<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:type" content="website"><meta property="og:site_name" content="Spoke At">
+<meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:type" content="website"><meta property="og:site_name" content="Spoke At"><meta property="og:locale" content="{"en_GB" if l == "en" else "sv_SE"}"><meta property="og:locale:alternate" content="{"sv_SE" if l == "en" else "en_GB"}">
+<meta property="og:image" content="{SITE}/assets/og-{l}.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{esc(OG_ALT[l])}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}/assets/og-{l}.png">
 {FONTS}<link rel="stylesheet" href="/assets/site.css?v={CSS_V}"><link rel="icon" href="/favicon.svg" type="image/svg+xml">{extra}</head>"""
 
 def chrome_top(l, alt=None):
@@ -302,9 +312,16 @@ def build_landing():
         desc = ("Find guest lectures, panels, seminars and conference slots that match your expertise, and reach the right organiser in their language."
                 if l == "en" else "Hitta gästföreläsningar, paneler, seminarier och konferensuppdrag som matchar din expertis, och nå rätt arrangör på deras språk.")
         path, alt = u_home(l), u_home("sv" if l == "en" else "en")
-        org = ld({"@context": "https://schema.org", "@type": "Organization", "name": "Spoke At", "url": SITE, "email": "hello@spokeat.com"})
+        org = ld({"@context": "https://schema.org", "@graph": [
+            {"@type": "Organization", "@id": f"{SITE}/#organization", "name": "Spoke At", "url": f"{SITE}/", "email": "hello@spokeat.com",
+             "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/logo-512.png", "width": 512, "height": 512},
+             "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": "hello@spokeat.com", "availableLanguage": ["English", "Swedish"]}},
+            {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "Spoke At", "url": f"{SITE}/", "inLanguage": ["en", "sv"], "publisher": {"@id": f"{SITE}/#organization"}},
+            {"@type": "WebPage", "@id": f"{SITE}{path}#webpage", "url": f"{SITE}{path}", "name": title, "description": desc, "inLanguage": l,
+             "isPartOf": {"@id": f"{SITE}/#website"}, "about": {"@id": f"{SITE}/#organization"}, "primaryImageOfPage": f"{SITE}/assets/og-{l}.png"}]})
         b, found = split_landing(b, l)
-        page = head(l, title, desc, path, alt, out["head"] + org) + chrome_top(l, alt) + f'<main class="lp">{b}</main>' + chrome_foot(l)
+        lhead = re.sub(r'<link[^>]+fonts\.(googleapis|gstatic)\.com[^>]*>', "", out["head"])
+        page = head(l, title, desc, path, alt, lhead + org) + chrome_top(l, alt) + f'<main class="lp">{b}</main>' + chrome_foot(l)
         write(path, page, l, alt)
         build_moved(l, found, alt_l="sv" if l == "en" else "en")
 
@@ -324,9 +341,31 @@ def cut_tag(b, tag):
     i = b.find(f"<{tag}"); j = b.find(f"</{tag}>", i)
     return b[:i] + b[j + len(tag) + 3:]
 
+POPULAR = {"en": ["how-to-get-speaking-opportunities", "become-a-guest-lecturer-at-a-university", "call-for-speakers-guide", "speak-at-your-old-university", "guest-lecture-email-templates", "do-guest-lecturers-get-paid"],
+           "sv": ["sa-far-du-uppdrag-som-forelasare", "bli-gastforelasare-pa-universitet", "call-for-speakers-guide", "forelasa-pa-ditt-gamla-universitet", "mejl-gastforelasning-kursansvarig", "far-gastforelasare-betalt"]}
+POP_T = {"en": ("Popular guides", "Practical guides to finding and landing speaking opportunities.", "All guides"),
+         "sv": ("Populära guider", "Praktiska guider för att hitta och få talaruppdrag.", "Alla guider")}
+
+def art_title(l, slug):
+    m = re.search(r'^title:\s*"?(.*?)"?\s*$', open(f"{ART}/{l}/{slug}.md", encoding="utf-8").read(), re.M)
+    return m.group(1)
+
+def popular_guides(l):
+    h, sub, allt = POP_T[l]
+    items = "".join(f'<li><a href="{u_article(l, s)}">{esc(art_title(l, s))}</a></li>' for s in POPULAR[l])
+    return (f'<section id="guides" style="background:#fff;border-top:1px solid #E4E7EE"><div class="wrap" style="max-width:1200px;padding:56px 24px">'
+            f'<div class="ophead"><div><h2 style="margin:0 0 6px;font-size:30px">{h}</h2><p class="muted" style="margin:0">{sub}</p></div>'
+            f'<a class="go" style="font-weight:600" href="{u_guides(l)}">{allt} →</a></div><ul class="popg">{items}</ul></div></section>')
+
+def insert_before_section(b, sid, html_):
+    i = b.find(f'<section id="{sid}"')
+    if i < 0: raise SystemExit(f"landing section {sid} missing")
+    return b[:i] + html_ + b[i:]
+
 def split_landing(b, l):
     # drop the design's own language bar, header and footer: the shared chrome replaces them
-    i = b.find('<nav aria-label="Language"')
+    i = max(b.find('<nav aria-label="Language"'), b.find('<nav aria-label="Språk"'))
+    if i < 0: raise SystemExit("landing language bar not found")
     s = b.rfind("<div", 0, i); e = b.find("</div>", b.find("</nav>", i)) + 6
     b = b[:s] + b[e:]
     b = cut_tag(b, "header"); b = cut_tag(b, "footer")
@@ -335,6 +374,7 @@ def split_landing(b, l):
         b, found[sid] = cut_section(b, sid)
     for a, h in (("#faq", u_faq(l)), ("#articles", u_guides(l)), ("#by-expertise", u_exp(l)), ("#find-speaker", u_find(l)), ("#benefits", u_why(l)), ("#how", u_how(l))):
         b = b.replace(f'href="{a}"', f'href="{h}"')
+    b = insert_before_section(b, "start", popular_guides(l))
     b, hero = cut_section(b, "top")
     i = b.find("<section")
     b = b[:i] + hero + opps_teaser(l) + b[i:]
@@ -568,7 +608,8 @@ def build_misc():
     nf = head("en", "Page not found · Spoke At", "Page not found", "/404") + chrome_top("en") + '<main><div class="wrap narrow"><h1>Page not found</h1><p>The page you were looking for does not exist. Try the <a href="/en/guides/">guides</a> or the <a href="/">home page</a>.</p></div></main>' + chrome_foot("en")
     write("/404.html", nf, sitemap=False)
     os.makedirs(f"{DIST}/assets", exist_ok=True)
-    open(f"{DIST}/assets/site.css", "w").write(CSS.strip())
+    open(f"{DIST}/assets/site.css", "w").write(FONT_CSS + CSS.strip())
+    shutil.copytree(f"{ROOT}/content/assets", f"{DIST}/assets", dirs_exist_ok=True)
     open(f"{DIST}/favicon.svg", "w").write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1F3A8A"/><rect x="8" y="20" width="16" height="5" rx="2.5" fill="#F5B83D"/></svg>')
     open(f"{DIST}/robots.txt", "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     open(f"{DIST}/_headers", "w").write("/assets/*\n  Cache-Control: public, max-age=86400\n")
